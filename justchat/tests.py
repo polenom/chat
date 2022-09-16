@@ -89,3 +89,5 @@ class TestChat(ChannelsLiveServerTestCase):
     @property
     def _chat_log_value(self):
         return [ i.get_attribute('innerHTML').rstrip() for i in self.driver.find_elements(by=By.CSS_SELECTOR, value="#chat-log p")]
+
+
