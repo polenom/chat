@@ -1,6 +1,37 @@
 import React from "react";
+import { connect } from "react-redux";
+import * as actions from "./../../store/actions/auth";
+import {Spin, Icon} from 'antd';
+
+const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>
 
 class SidePanel extends React.Component {
+    
+    state = {
+        loginForm: true,
+    }
+
+    authenticate = (e) =>  {
+        e.preventDefault();
+        if (this.state.loginForm) {
+            this.props.login(
+            e.target.username.value,
+            e.target.password.value
+            )
+        } else {
+            this.props.signup(
+                e.target.username.value,
+                e.target.email.value,
+                e.target.password1.value,
+                e.target.password2.value
+            )
+        }
+    }
+
+    changeFrom = (e) => {
+        this.setState({loginForm: !this.state.loginForm})
+    }
+
     render() {
         return (
             <div id="sidepanel">
@@ -18,12 +49,31 @@ class SidePanel extends React.Component {
                         </ul>
                     </div>
                     <div id="expanded">
-                        {/* <label htmlFor="twitter"><i className="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
-                        <input name="twitter" type="text" value="mikeross" />
-                        <label htmlFor="twitter"><i className="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
-                        <input name="twitter" type="text" value="ross81" />
-                        <label htmlFor="twitter"><i className="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
-                        <input name="twitter" type="text" value="mike.ross" /> */}
+                        {   this.props.loading?
+                            <Spin size="large" style={{width: "100%"}}/>:
+                            this.props.isAuthnticated?
+                            <button onClick={()=> this.props.logout()}> <span>logout</span></button>:
+                            <div>
+                            <form method="POST" onSubmit={this.authenticate}>
+                                {
+                                    this.state.loginForm?
+                                    <div>
+                                        <input name="username" type="text" placeholder="username" />
+                                        <input name="password" type="text" placeholder="password" />
+                                    </div>
+                                    :
+                                    <div>
+                                        <input name="username" type="text" placeholder="username" />
+                                        <input name="email" type="text" placeholder="email" />
+                                        <input name="password1" type="text" placeholder="password" />
+                                        <input name="password2" type="text" placeholder="confime password" />
+                                    </div>
+                                }
+                                <button type="submit"> Authenticate </button>
+                            </form>
+                            <button onClick={this.changeFrom}>{this.state.loginForm?'Sign Up': 'Sign In'}</button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -64,4 +114,17 @@ class SidePanel extends React.Component {
     }
 }
 
-export default SidePanel
+
+const mapStateToProps = state => ({
+    isAuthnticated : state.token !== null,
+    loading: state.loading
+})
+
+const mapDispatchToProps = dispatch => ({
+    login: (username, password) => dispatch(actions.authLogin(username, password)),
+    logout: ()=> dispatch(actions.logout()),
+    signup: (username, email, password1, password2) => dispatch(actions.authSignup(username, email, password1, password2))
+})
+
+
+export default connect(mapStateToProps,mapDispatchToProps )(SidePanel);

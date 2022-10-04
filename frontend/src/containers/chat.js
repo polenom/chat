@@ -43,7 +43,7 @@ class Chat extends React.Component {
 
     sendMessageHandler = (e) => {
         e.preventDefault();
-        console.log(this.state.message, 'seddddddddddddddddddd')
+        
         const messageObject = {
             from: 'admin',
             content: this.state.message,
@@ -71,8 +71,7 @@ class Chat extends React.Component {
 
     render() {
         const messages = this.state.messages
-        return (<div id="frame">
-        <SidePanel />    
+        return (   
         <div className="content">
             <div className="contact-profile">
                 <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
@@ -109,7 +108,7 @@ class Chat extends React.Component {
                 </form>
             </div>
         </div>
-    </div>)
+    )
     }
 }
 
