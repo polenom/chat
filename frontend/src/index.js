@@ -1,6 +1,6 @@
 import React from 'react'
+import BaseRouter from './routes'
 import ReactDOM from 'react-dom'
-import { BaseRouter } from './routes'
 import WebSocketInstance from './websocket'
 import {BrowserRouter as Router } from "react-router-dom"
 import SidePanel from './containers/sidepanel/sidepanel'
@@ -14,9 +14,6 @@ const store = createStore( reducer, applyMiddleware(thunk))
 
 class App extends React.Component {
 
-    componentDidMount() {
-        WebSocketInstance.connect();
-    }
 
     render() {
         return (

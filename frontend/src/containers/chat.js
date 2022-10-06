@@ -1,16 +1,31 @@
 import React from "react";
-import SidePanel from "./sidepanel/sidepanel";
 import WebSocketInstance from "../websocket";
+import { connect } from "react-redux";
+import {compose} from "redux";
+import withRouter from "../hoc/hoc";
+
 
 class Chat extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
+
+    state = {'message': ''}
+
+    initialiseChat() {
         this.waitForSocketConnection(() => {
             WebSocketInstance.addCallbacks(this.setMessages.bind(this), this.addMessage.bind(this));
-            WebSocketInstance.fetchMessages(this.props.currentUser);
+            WebSocketInstance.fetchMessages(
+                this.props.username,
+                this.props.chatId
+                );
         })
+        
+        WebSocketInstance.connect(this.props.chatId)
+        console.log(this.props.chatId, "chatid")
+        
+    }
 
+    constructor(props) {
+        super(props);
+        this.initialiseChat();
     }
 
     waitForSocketConnection(callback) {
@@ -18,22 +33,28 @@ class Chat extends React.Component {
         setTimeout(
             function() {
                 if ( WebSocketInstance.state() === 1) {
-                    console.log('connect is made')
+                    console.log("Connection is made")
                     callback()
                     return;
                 } else {
-                    console.log('waiting for connection...');
+                    console.log("wait for connection ...")
                     component.waitForSocketConnection(callback);
                 }
             }, 100
         )
     }
 
+    componentDidUpdate(a,b,c) {
+        
+    }
+
     addMessage(message) {
+        console.log(message, 'MESSAGES')
         this.setState({messages: [...this.state.messages, message]})
     }
 
     setMessages(messages) {
+        console.log(messages, 'MESSAGES')
         this.setState({messages: messages})
     } 
 
@@ -112,4 +133,25 @@ class Chat extends React.Component {
     }
 }
 
-export default Chat;
+
+
+const mapStateToProps = state => {
+    return {
+        username: state.username, 
+    }
+}
+
+const Chat1 = (props) => {
+    
+    console.log(props, 'prssssssssssssssssssssssssss')
+    return (
+        <div>
+            1233333333333
+        </div>
+    )
+}
+  
+
+
+
+export default compose(connect(mapStateToProps), withRouter)(Chat);

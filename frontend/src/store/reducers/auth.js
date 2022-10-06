@@ -3,11 +3,13 @@ import { updateObject } from "../utilities/stateutility";
 import * as actionTypes from "../actions/actionTypes";
 
 
+
 const initialState = {
     token: null,
     username: null,
     error: null,
     loading: false,
+    contacts: []
 }
 
 
@@ -39,8 +41,15 @@ const authLogout = (state) => {
         token: null,
         username: null,
         error: null,
-        loading: false
+        loading: false,
+        contacts: [],
     })
+}
+
+const getContacts = (state, action) => {
+    return updateObject(state, {
+        contacts: action.contacts,
+    }) 
 }
 
 const reducer = (state=initialState, action) => {
@@ -49,6 +58,7 @@ const reducer = (state=initialState, action) => {
         case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
         case actionTypes.AUTH_FAIL: return authFail(state, action);
         case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
+        case actionTypes.AUTH_CONTACTS: return getContacts(state, action);
         default: return state;
     } 
 }

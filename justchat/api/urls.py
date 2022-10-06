@@ -1,5 +1,5 @@
-from django.urls import path, include
-from justchat.api.urls import *
+from django.urls import path
+from justchat.api.views import *
 
 app_name = 'justchat'
 

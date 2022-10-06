@@ -31,6 +31,13 @@ export const logout = () => {
     }
 }
 
+export const Contacts = (contacts) => {
+    return {
+        type: actionTypes.AUTH_CONTACTS,
+        contacts,
+    }
+}
+
 export const checkAuthTimeout = expirationTime => {
     return dispatch => {
         setTimeout(() => {dispatch(logout())}, expirationTime * 3600)
@@ -52,6 +59,7 @@ export const authLogin = (username, password) => {
             localStorage.setItem('expirationDate', expirationDate);
             dispatch(authSuccess(username, token))
             dispatch(checkAuthTimeout(3600))
+            getContacts(username, token)(dispatch)
         })
         .catch( err => { dispatch(authFail(err))})
     }
@@ -73,6 +81,7 @@ export const authSignup = (username, email, password1, password2) => {
             localStorage.setItem('username', username);
             localStorage.setItem('expirationDate', expirationDate);
             dispatch(authSuccess(username, token))
+            getContacts(username, token)(dispatch)
             dispatch(checkAuthTimeout(3600))
         })
         .catch( err => {
@@ -92,8 +101,32 @@ export const authCheckState = () => {
                 dispatch(logout())
             } else {
                 dispatch(authSuccess(token));
+                getContacts(localStorage.getItem('username'), token)(dispatch);
                 dispatch(checkAuthTimeout((expirationDate - new Date())/ 1000));
             }
         }
+    }
+}
+
+export const getContacts = (username, token) => {
+    return dispatch => {
+        let url = 'http://127.0.0.1:8000/chat/' ;
+        if (username !== null && username !== undefined ) {
+            url += `?username=${username}`
+        }
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: (token === null || token === undefined)?'':`Token ${token}`
+        }
+        console.log('token' ,  localStorage.getItem('token'))
+        axios.get(url)
+        .then(res  => {
+                console.log('contacts ', res.data ) 
+                dispatch(Contacts(res.data))
+            })
+            .catch(
+                err => 
+                dispatch(Contacts([]))
+            )
     }
 }

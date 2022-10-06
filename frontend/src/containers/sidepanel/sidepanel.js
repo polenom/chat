@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "./../../store/actions/auth";
 import {Spin, Icon} from 'antd';
+import Profiles from "./contacts/contacts";
 
 const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>
 
@@ -30,6 +31,11 @@ class SidePanel extends React.Component {
 
     changeFrom = (e) => {
         this.setState({loginForm: !this.state.loginForm})
+    }
+
+
+    componentDidMount() {
+        this.props.getContacts()
     }
 
     render() {
@@ -83,26 +89,7 @@ class SidePanel extends React.Component {
             </div>
             <div id="contacts">
                 <ul>
-                    <li className="contact">
-                        <div className="wrap">
-                            <span className="contact-status online"></span>
-                            <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
-                            <div className="meta">
-                                <p className="name">Louis Litt</p>
-                                <p className="preview">You just got LITT up, Mike.</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li className="contact active">
-                        <div className="wrap">
-                            <span className="contact-status busy"></span>
-                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                            <div className="meta">
-                                <p className="name">Harvey Specter</p>
-                                <p className="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and htmlForty six other things.</p>
-                            </div>
-                        </div>
-                    </li>
+                    {this.props.contacts.map( e =>  <Profiles key={e.id} url={e.id} /> )}
                 </ul>
             </div>
             <div id="bottom-bar">
@@ -117,13 +104,18 @@ class SidePanel extends React.Component {
 
 const mapStateToProps = state => ({
     isAuthnticated : state.token !== null,
-    loading: state.loading
+    loading: state.loading,
+    contacts: state.contacts,
 })
 
 const mapDispatchToProps = dispatch => ({
     login: (username, password) => dispatch(actions.authLogin(username, password)),
-    logout: ()=> dispatch(actions.logout()),
-    signup: (username, email, password1, password2) => dispatch(actions.authSignup(username, email, password1, password2))
+    logout: ()=> { 
+            dispatch(actions.logout());
+            dispatch(actions.getContacts());
+        },
+    signup: (username, email, password1, password2) => dispatch(actions.authSignup(username, email, password1, password2)),
+    getContacts : (username=null, token=null) => dispatch(actions.getContacts(username, token))
 })
 
 

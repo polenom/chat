@@ -16,8 +16,8 @@ class WebSocketService {
         this.socketRef = null;
     }
 
-    connect() {
-        const path = "ws://127.0.0.1:8000/ws/chat/test/"
+    connect(chatId) {
+        const path = `ws://127.0.0.1:8000/ws/chat/${chatId}/`
         this.socketRef = new WebSocket(path);
         this.socketRef.onopen= () => {
             console.log('websoket open')
@@ -30,13 +30,14 @@ class WebSocketService {
         }
         this.socketRef.onclose = () => {
             console.log('socket is closed')
-            this.connect();
+            this.connect(chatId);
         }
     }
     socketNewMessage(data) {
         const parseData = JSON.parse(data);
         const command = parseData.command;
         console.log(command, 'command')
+        console.log(parseData)
         if (Object.keys(this.callbacks).length === 0) {
             return;
         }
@@ -48,9 +49,8 @@ class WebSocketService {
         }
     }
 
-    fetchMessages(username) {
-        console.log(username, 'username')
-        this.sendMessage({command: 'fetch_messages', username: username})
+    fetchMessages(username, chatId) {
+        this.sendMessage({command: 'fetch_messages', username: username, chatId: chatId})
     }
 
     newChatMessage(message) {
@@ -63,9 +63,7 @@ class WebSocketService {
     }
 
     sendMessage(data) {
-        console.log(data, 'data')
         try {
-            console.log(JSON.stringify({...data}), 'send message')
             this.socketRef.send(JSON.stringify({...data}))
         } catch(err) {
             console.log(err.message)
