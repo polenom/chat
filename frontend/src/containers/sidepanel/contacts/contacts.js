@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 const Profiles = (props) => {
-
-
     return (
         <NavLink to={`/chat/${props.url}/`} >
             <li className="contact" >

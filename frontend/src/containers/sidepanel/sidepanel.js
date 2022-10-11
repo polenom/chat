@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import * as actions from "./../../store/actions/auth";
 import {Spin, Icon} from 'antd';
 import Profiles from "./contacts/contacts";
+import AddChatModel from "./../popup/popup"
 
 const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>
 
@@ -44,7 +45,7 @@ class SidePanel extends React.Component {
             <div id="profile">
                 <div className="wrap">
                     <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" className="online" alt="" />
-                    <p>Mike Ross</p>
+                    <p>{this.props.username?this.props.username:'No authentication'}</p>
                     <i className="fa fa-chevron-down expand-button" aria-hidden="true"></i>
                     <div id="status-options">
                         <ul>
@@ -93,7 +94,7 @@ class SidePanel extends React.Component {
                 </ul>
             </div>
             <div id="bottom-bar">
-                <button id="addcontact"><i className="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>
+                <AddChatModel />
                 <button id="settings"><i className="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
             </div>
         </div>    
@@ -103,9 +104,10 @@ class SidePanel extends React.Component {
 
 
 const mapStateToProps = state => ({
-    isAuthnticated : state.token !== null,
-    loading: state.loading,
-    contacts: state.contacts,
+    isAuthnticated : state.authReducer.token !== null,
+    loading: state.authReducer.loading,
+    contacts: state.authReducer.contacts,
+    username: state.authReducer.username
 })
 
 const mapDispatchToProps = dispatch => ({

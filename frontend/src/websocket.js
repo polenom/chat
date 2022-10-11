@@ -1,5 +1,7 @@
 class WebSocketService {
 
+    isReconnect = true;
+
     static instance = null;
 
     callbacks = {};
@@ -17,10 +19,11 @@ class WebSocketService {
     }
 
     connect(chatId) {
+        
         const path = `ws://127.0.0.1:8000/ws/chat/${chatId}/`
         this.socketRef = new WebSocket(path);
         this.socketRef.onopen= () => {
-            console.log('websoket open')
+            console.log('websoket open, chatid :', chatId)
         }
         this.socketRef.onmessage = e => {
             this.socketNewMessage(e.data)
@@ -28,16 +31,19 @@ class WebSocketService {
         this.socketRef.onerror = e => {
             console.log(e.message)
         }
-        this.socketRef.onclose = () => {
-            console.log('socket is closed')
-            this.connect(chatId);
+        this.socketRef.onclose = (a) => {
+            console.log('socket is closed', this.isReconnect)
+            if (this.isReconnect) {
+                setTimeout(()=>{
+                    this.connect(chatId)
+                }, 1000)
+            }
+            this.isReconnect = true
         }
     }
     socketNewMessage(data) {
         const parseData = JSON.parse(data);
         const command = parseData.command;
-        console.log(command, 'command')
-        console.log(parseData)
         if (Object.keys(this.callbacks).length === 0) {
             return;
         }
@@ -54,7 +60,8 @@ class WebSocketService {
     }
 
     newChatMessage(message) {
-        this.sendMessage({command: 'new_message', from: message.from, message: message.content})
+        console.log(message)
+        this.sendMessage({command: 'new_message', from: message.from, message: message.content, chatid: message.chatid })
     }
 
     addCallbacks(messageCallback, newMessageCallback) {
@@ -68,6 +75,11 @@ class WebSocketService {
         } catch(err) {
             console.log(err.message)
         }
+    }
+
+    close(reconect = false ) {
+        this.isReconnect = reconect
+        this.socketRef.close()
     }
 
     state() {

@@ -5,12 +5,18 @@ import WebSocketInstance from './websocket'
 import {BrowserRouter as Router } from "react-router-dom"
 import SidePanel from './containers/sidepanel/sidepanel'
 import {Provider} from "react-redux";
-import {applyMiddleware, createStore} from "redux";
-import reducer from './store/reducers/auth';
+import {applyMiddleware, createStore, combineReducers} from "redux";
+import authReducer from './store/reducers/auth';
 import thunk from 'redux-thunk';
 import 'antd/dist/antd.css';
+import createChatReducer from "./store/reducers/createChat"
 
-const store = createStore( reducer, applyMiddleware(thunk))
+let allReducer = combineReducers({
+    authReducer,
+    createChatReducer
+})
+
+const store = createStore( allReducer, applyMiddleware(thunk))
 
 class App extends React.Component {
 

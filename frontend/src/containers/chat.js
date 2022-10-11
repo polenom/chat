@@ -7,7 +7,10 @@ import withRouter from "../hoc/hoc";
 
 class Chat extends React.Component {
 
-    state = {'message': ''}
+    state = {
+        'message': '',
+        'url' : this.props.chatId         
+    }
 
     initialiseChat() {
         this.waitForSocketConnection(() => {
@@ -19,8 +22,6 @@ class Chat extends React.Component {
         })
         
         WebSocketInstance.connect(this.props.chatId)
-        console.log(this.props.chatId, "chatid")
-        
     }
 
     constructor(props) {
@@ -44,17 +45,19 @@ class Chat extends React.Component {
         )
     }
 
-    componentDidUpdate(a,b,c) {
-        
+    componentDidUpdate() {
+        if (this.state.url !== this.props.chatId) {
+            this.setState({url: this.props.chatId})
+            WebSocketInstance.close()
+            this.initialiseChat() 
+        }
     }
 
     addMessage(message) {
-        console.log(message, 'MESSAGES')
         this.setState({messages: [...this.state.messages, message]})
     }
 
     setMessages(messages) {
-        console.log(messages, 'MESSAGES')
         this.setState({messages: messages})
     } 
 
@@ -64,10 +67,10 @@ class Chat extends React.Component {
 
     sendMessageHandler = (e) => {
         e.preventDefault();
-        
         const messageObject = {
-            from: 'admin',
+            from: this.props.username ,
             content: this.state.message,
+            chatid: this.props.chatId
         };
         WebSocketInstance.newChatMessage(messageObject);
         this.setState({message: ''})
@@ -137,21 +140,8 @@ class Chat extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        username: state.username, 
+        username: state.authReducer.username, 
     }
 }
-
-const Chat1 = (props) => {
-    
-    console.log(props, 'prssssssssssssssssssssssssss')
-    return (
-        <div>
-            1233333333333
-        </div>
-    )
-}
-  
-
-
 
 export default compose(connect(mapStateToProps), withRouter)(Chat);
