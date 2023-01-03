@@ -1,0 +1,16 @@
+FROM python:3.10
+RUN apt-get update -y && apt-get update -y
+WORKDIR /app
+COPY ./main ./main
+COPY ./db.sqlite3 ./
+COPY ./manage.py ./
+COPY ./requirements.txt ./
+COPY ./venv ./venv
+COPY ./justchat ./justchat
+ENV PYTHONPATN=${PYTHONPATN}:${PWD}
+RUN pip3 install virtualenv
+RUN python3.10 -m venv env/
+RUN pip3 install --upgrade pip
+RUN . env/bin/activate && pip3 install -r requirements.txt
+RUN cp ./venv/lib/python3.9/site-packages/rest_auth/registration/*.py ./env/lib/python3.10/site-packages/rest_auth/registration/
+RUN cp ./venv/lib/python3.9/site-packages/rest_auth/*.py ./env/lib/python3.10/site-packages/rest_auth/

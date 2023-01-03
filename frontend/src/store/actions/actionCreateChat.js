@@ -27,7 +27,7 @@ export const setUsers = (users) => {
 export const getUsersAPI = () => {
     return dispatch => {
         let username = localStorage.getItem('username')
-        let url = 'http://127.0.0.1:8000/chat/users/'
+        let url = 'http://93.125.42.237:8000/chat/users/'
         axios.get(url)
         .then(res => {
             dispatch(setUsers(res.data.users.filter(element => element !== username )))
@@ -38,7 +38,7 @@ export const getUsersAPI = () => {
 
 export const createChatAPI = (users) => {
     return dispatch => {
-        let url = 'http://127.0.0.1:8000/chat/create/'
+        let url = 'http://93.125.42.237:8000/chat/create/'
         let token = localStorage.getItem('token');
         let username = localStorage.getItem('username');
         axios.post(url, {

@@ -20,7 +20,7 @@ class WebSocketService {
 
     connect(chatId) {
         
-        const path = `ws://127.0.0.1:8000/ws/chat/${chatId}/`
+        const path = `ws://93.125.42.237:8000/ws/chat/${chatId}/`
         this.socketRef = new WebSocket(path);
         this.socketRef.onopen= () => {
             console.log('websoket open, chatid :', chatId)

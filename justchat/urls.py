@@ -7,3 +7,4 @@ app_name = 'justchat'
 urlpatterns = [
     path('', ChatListView.as_view()),
 ]
+

@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis
+    restart: always
+
+  django:
+    build:
+      context: ./
+      dockerfile: DockerFile
+    ports:
+      - 8000:8000
+    command: sh -c ". env/bin/activate && python manage.py runserver 0.0.0.0:8000"
+
+  front:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    command: sh -c "npm start"
+    depends_on:
+      - django
+      - redis

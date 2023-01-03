@@ -47,7 +47,7 @@ export const checkAuthTimeout = expirationTime => {
 export const authLogin = (username, password) => {
     return dispatch => {        
         dispatch(authStart());
-        axios.post('http://127.0.0.1:8000/rest-auth/login/', {
+        axios.post('http://93.125.42.237:8000/rest-auth/login/', {
             username: username,
             password: password
         })
@@ -68,7 +68,7 @@ export const authLogin = (username, password) => {
 export const authSignup = (username, email, password1, password2) => {
     return dispatch => {
         dispatch(authStart());
-        axios.post('http://127.0.0.1:8000/rest-auth/registration/', {
+        axios.post('http://93.125.42.237:8000/rest-auth/registration/', {
             username,
             email,
             password1,
@@ -110,7 +110,7 @@ export const authCheckState = () => {
 
 export const getContacts = (username, token) => {
     return dispatch => {
-        let url = 'http://127.0.0.1:8000/chat/' ;
+        let url = 'http://93.125.42.237:8000/chat/' ;
         if (username !== null && username !== undefined ) {
             url += `?username=${username}`
         }

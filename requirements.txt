@@ -17,6 +17,7 @@ daphne==3.0.2
 defusedxml==0.7.1
 Django==4.1
 django-allauth==0.51.0
+django-cors-headers==3.13.0
 django-rest-auth==0.9.5
 djangorestframework==3.13.1
 h11==0.13.0

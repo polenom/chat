@@ -18,10 +18,20 @@ from django.urls import path, include
 
 from justchat import views
 
+from rest_auth.registration import urls
+from rest_auth import serializers
+
+from justchat.views import ChangeRegistration
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chat/',include('justchat.api.urls', namespace='justchat')),
     path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('rest-auth/registration/', ChangeRegistration.as_view() ),
     path('api-auth/', include('rest_framework.urls')),
 ]
+
+
+
+
+

@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-o4nb&mx7w=8uqmwv)rt1sn(ghu9@k&m%s)!kh^y$sr_*$-iwv$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0',
+                 '192.168.13.248',
+                 'chat.by',
+                 '93.125.42.237']
 
 
 # Application definition
@@ -144,11 +147,10 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
-
 
 SITE_ID = 1
 
@@ -167,6 +169,9 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:1234',
     'http://127.0.0.1:1234',
+    'http://192.168.13.248:8080',
+    'http://chat.by:8080',
+    'http://93.125.42.237:8080'
 )
 
 ACCOUNT_EMAIL_REQUIRED = False
